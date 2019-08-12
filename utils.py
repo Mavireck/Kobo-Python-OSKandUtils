@@ -45,10 +45,6 @@ def mprint(string,row=0,col=0):
 	fbink_cfg.col = 0
 	return True
 
-def mclose():
-	fbink.fbink_close(fbfd)
-	return True
-
 def mpopup(title, text,buttons,filePath="temp_mpopup.png",screen_width=default_screenWidth,screen_height=default_screenHeight):
 	"""
 	Pauses the app, displays a popup with as many buttons as there are in the array 'button'
@@ -115,6 +111,7 @@ def mpopup(title, text,buttons,filePath="temp_mpopup.png",screen_width=default_s
 						t.close()
 						#Restoring dump
 						fbink.fbink_restore(fbfd,fbink_cfg,fbink_dumpcfg)
+						fbink.fbink_close(fbfd)
 						#Returning value
 						return buttons[i]["valueToReturn"]
 		except:
@@ -211,6 +208,7 @@ def mprompt(title, text,filePath="temp_mprompt.png",screen_width=default_screenW
 						t.close()
 						#Restoring dump
 						fbink.fbink_restore(fbfd,fbink_cfg,fbink_dumpcfg)
+						fbink.fbink_close(fbfd)
 						return runeStr
 					else:
 						continue
