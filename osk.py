@@ -15,6 +15,7 @@ KTcapsLock       = 4
 KTcontrol        = 5
 KTalt            = 6
 
+mainFolder = "/mnt/onboard/.adds/mavireck/Kobo-Python-OSKandUtils/" #For fonts access
 
 def validateKeymap(keyboard):
 	# ToDo
@@ -98,8 +99,9 @@ class virtKeyboard:
 		gray = 128
 		dark_gray = 50
 
-		font_merriweatherRegular = ImageFont.truetype("fonts/Merriweather-Regular.ttf", 30)
-		font_merriweatherBold = ImageFont.truetype("fonts/Merriweather-Bold.ttf", 30)
+		print(mainFolder+"fonts/Merriweather-Regular.ttf")
+		font_merriweatherRegular = ImageFont.truetype(mainFolder+"fonts/Merriweather-Regular.ttf", 30)
+		font_merriweatherBold = ImageFont.truetype(mainFolder+"fonts/Merriweather-Bold.ttf", 30)
 
 		img = Image.new('L', (self.widthPX, self.heightPX+1), color=white)
 		kc = ImageDraw.Draw(img, 'L')
@@ -166,3 +168,7 @@ def timeDelta(date1,date2):
 	dt = date2 - date1
 	ms = (dt.days * 24 * 60 * 60 + dt.seconds) * 1000 + dt.microseconds / 1000.0
 	return ms
+
+
+def get_script_path():
+    return os.path.dirname(os.path.realpath(sys.argv[0]))
