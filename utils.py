@@ -4,15 +4,16 @@ import sys
 import os
 # Load the wrapper module, it's linked against FBInk, so the dynamic loader will take care of pulling in the actual FBInk library
 from _fbink import ffi, lib as fbink
-# Load keyboard librairy
-import osk
+# Load Tools
+from time import time
 import json
 # Load Pillow
 from PIL import Image, ImageDraw, ImageFont
-# Load touch librairy
+# My own librairies (Kobo-Input-Python, Kobo-Python-OSKandUtils)
+sys.path.append('../Kobo-Input-Python')
+sys.path.append('../Kobo-Python-OSKandUtils')
 import KIP
-# Load Time (for debounce purposes)
-from time import time
+import osk
 
 # Setup
 pp_color = 240
@@ -27,15 +28,6 @@ small_font = ImageFont.truetype("fonts/Merriweather-Regular.ttf", 26)
 small_font_bold = ImageFont.truetype("fonts/Merriweather-Bold.ttf", 26)
 
 
-
-
-
-def mfullscreen_refresh():
-	try:
-		os.system("fbink -refresh") #Was not able to do it through the Python API (a few errors come in)
-		return True
-	except:
-		return False
 
 def mprint(string,row=0,col=0):
 	fbink_cfg.row = row
