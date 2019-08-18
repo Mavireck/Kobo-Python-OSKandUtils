@@ -24,8 +24,9 @@ gray = 128
 default_screenWidth = 1080
 default_screenHeight = 1440
 touchPath = "/dev/input/event1"
-small_font = ImageFont.truetype("fonts/Merriweather-Regular.ttf", 26)
-small_font_bold = ImageFont.truetype("fonts/Merriweather-Bold.ttf", 26)
+mainFolder = "/mnt/onboard/.adds/mavireck/Kobo-Python-OSKandUtils/" #For fonts access
+small_font = ImageFont.truetype(mainFolder+"fonts/Merriweather-Regular.ttf", 26)
+small_font_bold = ImageFont.truetype(mainFolder+"fonts/Merriweather-Bold.ttf", 26)
 
 
 
@@ -124,7 +125,7 @@ def mprompt(title, text,filePath="temp_mprompt.png",screen_width=default_screenW
 	# INITIALIZING TOUCH
 	t = KIP.inputObject(touchPath, screen_width,screen_height)
 	# INITIALIZING KEYBOARD
-	with open('sample-keymap-en_us.json') as json_file:
+	with open(mainFolder+'sample-keymap-en_us.json') as json_file:
 		km = json.load(json_file)
 		vk = osk.virtKeyboard(km, screen_width, screen_height)
 		# Generate an image of the OSK
@@ -153,9 +154,9 @@ def mprompt(title, text,filePath="temp_mprompt.png",screen_width=default_screenW
 	fbink_dumpcfg = ffi.new("FBInkDump *")
 	fbink.fbink_region_dump(fbfd,0, 0,screen_width,screen_height,fbink_cfg,fbink_dumpcfg)
 	# Displaying image of the popup
-	fbink.fbink_print_image(fbfd, filePath, start_coord_x, start_coord_y, fbink_cfg)
+	fbink.fbink_print_image(fbfd, str(filePath).encode('ascii'), start_coord_x, start_coord_y, fbink_cfg)
 	# Displaying image of the OSK
-	fbink.fbink_print_image(fbfd,vkPNG, int(vk.StartCoords["X"]), int(vk.StartCoords["Y"]),fbink_cfg)
+	fbink.fbink_print_image(fbfd,str(vkPNG).encode('ascii'), int(vk.StartCoords["X"]), int(vk.StartCoords["Y"]),fbink_cfg)
 	# Listening for touch in one of a button's area
 	lastTouch=time()
 	lastTouchArea=[-3,-3,-2,-2]
@@ -169,7 +170,7 @@ def mprompt(title, text,filePath="temp_mprompt.png",screen_width=default_screenW
 	fbink_cfg.row=32
 	fbink_cfg.col=6
 	while True:
-		try:
+		# try:
 			(x, y, err) = t.getInput()
 			if time()-lastTouch>0.2 or not coordsInArea(x,y,lastTouchArea):
 				# Simple yet effective debounce system
@@ -184,12 +185,12 @@ def mprompt(title, text,filePath="temp_mprompt.png",screen_width=default_screenW
 						else:
 							key = str(k["keyCode"]).lower()
 						runeStr = runeStr + key
-						fbink.fbink_print(fbfd, str(runeStr), fbink_cfg)
+						fbink.fbink_print(fbfd, str(runeStr).encode('ascii'), fbink_cfg)
 					elif k["keyType"] == osk.KTbackspace:
 						if len(runeStr) > 0:
 							# removing last element and drawing and empty space instead
 							runeStr = runeStr[:-1] 
-							fbink.fbink_print(fbfd, str(runeStr) + " ", fbink_cfg)
+							fbink.fbink_print(fbfd, str(str(runeStr)+" ").encode('ascii'), fbink_cfg)
 					elif k["keyType"] == osk.KTcapsLock:
 						if upperCase:
 							upperCase = False
@@ -204,9 +205,9 @@ def mprompt(title, text,filePath="temp_mprompt.png",screen_width=default_screenW
 						return runeStr
 					else:
 						continue
-		except:
-			print("Bad touch event")
-			continue
+		# except:
+		# 	print("Bad touch event")
+		# 	continue
 	return True
 
 
